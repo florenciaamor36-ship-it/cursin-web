@@ -4,83 +4,71 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cursin V2 - La Mina de Oro</title>
     <style>
-        :root { --blue: #2563eb; --dark: #111827; --emerald: #059669; --gold: #eab308; }
-        body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: #f4f7fa; color: var(--dark); }
+        :root { --blue: #2563eb; --dark: #0f172a; --gold: #f59e0b; }
+        body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: #f8fafc; color: var(--dark); }
+        header { background: white; padding: 30px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+        .stats { background: #fef3c7; color: #92400e; padding: 6px 16px; border-radius: 99px; font-weight: 700; font-size: 0.85rem; display: inline-block; margin-bottom: 10px; }
+        .search-box { max-width: 900px; margin: 20px auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        input, select { padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.95rem; min-width: 200px; }
         
-        header { background: white; padding: 40px 20px; text-align: center; border-bottom: 1px solid #e5e7eb; }
-        .stats { background: #ecfdf5; color: var(--emerald); padding: 6px 16px; border-radius: 99px; font-weight: 700; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
+        .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         
-        .search-container { max-width: 800px; margin: 20px auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        input, select { padding: 12px 18px; border-radius: 10px; border: 1px solid #d1d5db; font-size: 0.95rem; }
+        /* Tarjeta */
+        .card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; cursor: pointer; transition: 0.25s; display: flex; flex-direction: column; height: 100%; position: relative; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         
-        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .img-wrap { height: 170px; width: 100%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .img-wrap img.is-logo { object-fit: contain; width: 70%; height: 70%; }
         
-        /* Tarjeta corregida */
-        .card { background: white; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; height: 100%; position: relative; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
-        
-        /* Contenedor de imagen corregido para logos y miniaturas */
-        .card-img-container { height: 160px; width: 100%; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid #f0f0f0; position: relative; }
-        .card-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; padding: 10px; transition: 0.3s; }
-        /* Si es una miniatura de curso real (no logo), usamos cover */
-        .card-img-container img.is-thumb { object-fit: cover; padding: 0; width: 100%; height: 100%; }
+        .card-body { padding: 15px; flex-grow: 1; }
+        .p-tag { font-size: 0.7rem; font-weight: 700; color: var(--blue); text-transform: uppercase; margin-bottom: 5px; }
+        .card h3 { margin: 0 0 8px 0; font-size: 1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card p { font-size: 0.8rem; color: #64748b; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        .badge-official { position: absolute; top: 12px; left: 12px; background: var(--gold); color: black; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 0.7rem; z-index: 2; }
-        
-        .card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .plat-tag { font-size: 0.7rem; font-weight: 700; color: var(--blue); text-transform: uppercase; margin-bottom: 8px; }
-        .card h3 { margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card p { font-size: 0.85rem; color: #6b7280; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
-        /* Paginación */
-        .pagination { margin: 40px 0; text-align: center; display: flex; justify-content: center; gap: 15px; align-items: center; }
-        .btn-pag { padding: 10px 25px; background: white; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .btn-pag:hover:not(:disabled) { background: #f9fafb; border-color: var(--blue); color: var(--blue); }
-        .btn-pag:disabled { opacity: 0.5; cursor: not-allowed; }
+        /* Paginación numerada */
+        .pagi { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 40px 0; align-items: center; }
+        .pagi button { padding: 8px 14px; border: 1px solid #e2e8f0; background: white; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+        .pagi button.active { background: var(--blue); color: white; border-color: var(--blue); }
+        .pagi button:disabled { opacity: 0.5; cursor: not-allowed; }
 
         /* Modal */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(8px); padding: 20px; box-sizing: border-box; }
-        .modal-content { background: white; border-radius: 24px; max-width: 600px; width: 100%; overflow: hidden; position: relative; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; cursor: pointer; color: #999; z-index: 10; }
-        .modal-header-img { height: 220px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .modal-header-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .modal-body { padding: 35px; }
-        .btn-go { display: block; background: var(--blue); color: white; text-align: center; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; margin-top: 25px; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); padding: 20px; box-sizing: border-box; }
+        .m-content { background: white; border-radius: 20px; max-width: 600px; width: 100%; overflow: hidden; position: relative; }
+        .m-close { position: absolute; top: 10px; right: 20px; font-size: 2.5rem; cursor: pointer; color: #64748b; z-index: 10; }
+        .m-img { height: 250px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .m-img img { width: 100%; height: 100%; object-fit: cover; }
+        .m-body { padding: 30px; }
+        .btn-link { display: block; background: var(--blue); color: white; text-align: center; padding: 16px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 20px; }
     </style>
 </head>
 <body>
     <header>
-        <div class="stats">🚀 <span id="total-count">...</span> CURSOS CERTIFICADOS</div>
+        <div class="stats">🚀 <span id="total-val">...</span> CURSOS EN LA BASE DE DATOS</div>
         <h1>Cursin V2 📚</h1>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="¿Qué quieres aprender?">
-            <select id="cat-filter"><option value="">Categorías</option></select>
-            <select id="plat-filter"><option value="">Plataformas</option></select>
+        <div class="search-box">
+            <input type="text" id="q-in" placeholder="¿Qué quieres aprender?">
+            <select id="cat-sel"><option value="">Todas las Categorías</option></select>
+            <select id="plat-sel"><option value="">Todas las Plataformas</option></select>
         </div>
     </header>
 
     <div class="container">
         <div id="course-grid" class="grid"></div>
-        <div id="loader" style="text-align:center; padding:50px;">⛏️ Picando la mina...</div>
-        
-        <div class="pagination">
-            <button id="prev-btn" class="btn-pag" disabled>Anterior</button>
-            <span id="page-info">Página 1</span>
-            <button id="next-btn" class="btn-pag">Siguiente</button>
-        </div>
+        <div id="loader" style="text-align:center; padding:50px;">Buscando cursos...</div>
+        <div id="pagi-wrap" class="pagi"></div>
     </div>
 
     <div id="course-modal" class="modal" onclick="if(event.target==this)closeM()">
-        <span class="modal-close" onclick="closeM()">&times;</span>
-        <div class="modal-content">
-            <div id="m-header" class="modal-header-img"></div>
-            <div class="modal-body">
-                <div id="m-plat" class="plat-tag"></div>
-                <h2 id="m-title" style="margin:0 0 15px 0;"></h2>
-                <p id="m-desc" style="color:#4b5563; line-height:1.7;"></p>
-                <a id="m-link" href="#" target="_blank" class="btn-go">ACCEDER AL CURSO GRATIS</a>
+        <span class="m-close" onclick="closeM()">&times;</span>
+        <div class="m-content">
+            <div id="m-header-img" class="m-img"></div>
+            <div class="m-body">
+                <div id="m-plat-name" class="p-tag"></div>
+                <h2 id="m-title-text" style="margin:0 0 15px 0;"></h2>
+                <p id="m-desc-text" style="color:#475569; line-height:1.6;"></p>
+                <a id="m-go-link" href="#" target="_blank" class="btn-link">ACCEDER AL CURSO GRATIS</a>
             </div>
         </div>
     </div>
@@ -90,42 +78,47 @@
         const S_KEY = 'sb_publishable_KmyqfJTmmW4R5FKUeB5b4A_GVFYnn4b';
         const headers = { 'apikey': S_KEY, 'Authorization': 'Bearer ' + S_KEY };
         
-        let page = 0;
+        let currentPage = 1;
         const limit = 24;
+        let totalRecords = 0;
 
-        function getImgHtml(c, isModal = false) {
-            let src = c.imagen_url || '';
-            const isLogo = src.toLowerCase().includes('logo') || c.plataforma.toLowerCase().includes('youtube') || c.plataforma.toLowerCase().includes('microsoft');
-            
-            if (!src || src === '') {
-                src = 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600';
-            }
-            
-            return `<img src="${src}" class="${isLogo ? 'is-logo' : 'is-thumb'}" onerror="this.src='https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600'">`;
+        function getYoutubeThumb(url) {
+            if (!url) return null;
+            const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length == 11) ? `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg` : null;
+        }
+
+        function getImg(c) {
+            const yt = getYoutubeThumb(c.url);
+            if (yt) return yt;
+            if (c.imagen_url && c.imagen_url.includes('http')) return c.imagen_url;
+            return 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600';
         }
 
         function openM(c) {
-            document.getElementById('m-header').innerHTML = getImgHtml(c, true);
-            document.getElementById('m-title').innerText = c.titulo;
-            document.getElementById('m-desc').innerText = c.descripcion || "Curso oficial con certificación gratuita disponible.";
-            document.getElementById('m-plat').innerText = c.plataforma;
-            document.getElementById('m-link').href = c.url;
+            document.getElementById('m-header-img').innerHTML = `<img src="${getImg(c)}">`;
+            document.getElementById('m-title-text').innerText = c.titulo;
+            document.getElementById('m-desc-text').innerText = c.descripcion || "Curso oficial con certificación gratuita.";
+            document.getElementById('m-plat-name').innerText = c.plataforma;
+            document.getElementById('m-go-link').href = c.url;
             document.getElementById('course-modal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
         function closeM() { document.getElementById('course-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-        async function fetchCourses() {
+        async function fetchContent() {
             const grid = document.getElementById('course-grid');
             const loader = document.getElementById('loader');
-            const search = document.getElementById('search-input').value;
-            const cat = document.getElementById('cat-filter').value;
-            const plat = document.getElementById('plat-filter').value;
+            const search = document.getElementById('q-in').value;
+            const cat = document.getElementById('cat-sel').value;
+            const plat = document.getElementById('plat-sel').value;
 
             loader.style.display = 'block';
             grid.innerHTML = '';
+            document.getElementById('pagi-wrap').innerHTML = '';
 
-            let u = `${S_URL}cursos?select=*,categorias(nombre)&limit=${limit}&offset=${page * limit}`;
+            let u = `${S_URL}cursos?select=*,categorias(nombre)&limit=${limit}&offset=${(currentPage - 1) * limit}`;
             if (search) u += `&or=(titulo.ilike.*${encodeURIComponent(search)}*,descripcion.ilike.*${encodeURIComponent(search)}*)`;
             if (cat) u += `&categorias.nombre=eq.${encodeURIComponent(cat)}`;
             if (plat) u += `&plataforma.eq.${encodeURIComponent(plat)}`;
@@ -134,55 +127,92 @@
             try {
                 const r = await fetch(u, { headers });
                 const data = await r.json();
+                
+                // Fetch count for pagination
+                let countU = `${S_URL}cursos?select=count`;
+                if (search) countU += `&or=(titulo.ilike.*${encodeURIComponent(search)}*,descripcion.ilike.*${encodeURIComponent(search)}*)`;
+                if (cat) countU += `&categorias.nombre=eq.${encodeURIComponent(cat)}`;
+                if (plat) countU += `&plataforma.eq.${encodeURIComponent(plat)}`;
+                const cr = await fetch(countU, { headers });
+                const cData = await cr.json();
+                totalRecords = cData[0].count;
+                document.getElementById('total-val').innerText = totalRecords.toLocaleString();
+
                 loader.style.display = 'none';
                 data.forEach(c => {
-                    const isOff = ['santander', 'unam', 'mexicox', 'google'].some(v => c.plataforma.toLowerCase().includes(v));
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.onclick = () => openM(c);
+                    const isYT = c.plataforma.toLowerCase().includes('youtube');
                     card.innerHTML = `
-                        <div class="card-img-container">
-                            ${isOff ? '<div class="badge-official">OFICIAL</div>' : ''}
-                            ${getImgHtml(c)}
+                        <div class="img-wrap">
+                            <img src="${getImg(c)}" class="${(isYT && !getYoutubeThumb(c.url)) ? 'is-logo' : ''}">
                         </div>
                         <div class="card-body">
-                            <div class="plat-tag">${c.plataforma}</div>
+                            <div class="p-tag">${c.plataforma}</div>
                             <h3>${c.titulo}</h3>
                             <p>${c.descripcion || ''}</p>
                         </div>`;
                     grid.appendChild(card);
                 });
                 
-                document.getElementById('prev-btn').disabled = page === 0;
-                document.getElementById('next-btn').disabled = data.length < limit;
-                document.getElementById('page-info').innerText = `Página ${page + 1}`;
-            } catch (e) { loader.innerText = 'Error de conexión.'; }
+                renderPagination();
+            } catch (e) { loader.innerText = 'Error al cargar cursos.'; }
+        }
+
+        function renderPagination() {
+            const wrap = document.getElementById('pagi-wrap');
+            const totalPages = Math.ceil(totalRecords / limit);
+            const maxVisible = 5;
+            
+            let start = Math.max(1, currentPage - 2);
+            let end = Math.min(totalPages, start + maxVisible - 1);
+            if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
+
+            if (currentPage > 1) {
+                const btn = document.createElement('button');
+                btn.innerText = '«';
+                btn.onclick = () => { currentPage = 1; fetchContent(); window.scrollTo(0,0); };
+                wrap.appendChild(btn);
+            }
+
+            for (let i = start; i <= end; i++) {
+                const btn = document.createElement('button');
+                btn.innerText = i;
+                if (i === currentPage) btn.className = 'active';
+                btn.onclick = () => { currentPage = i; fetchContent(); window.scrollTo(0,0); };
+                wrap.appendChild(btn);
+            }
+
+            if (currentPage < totalPages) {
+                const btn = document.createElement('button');
+                btn.innerText = '»';
+                btn.onclick = () => { currentPage = totalPages; fetchContent(); window.scrollTo(0,0); };
+                wrap.appendChild(btn);
+            }
         }
 
         async function init() {
-            const rc = await fetch(S_URL + 'categorias', { headers });
-            const cats = await rc.json();
-            const cs = document.getElementById('cat-filter');
-            cats.sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(c => {
+            const [rc, rp] = await Promise.all([
+                fetch(S_URL + 'categorias', { headers }).then(r => r.json()),
+                fetch(S_URL + 'cursos?select=plataforma', { headers }).then(r => r.json())
+            ]);
+            
+            const cs = document.getElementById('cat-sel');
+            rc.sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(c => {
                 cs.innerHTML += `<option value="${c.nombre}">${c.nombre}</option>`;
             });
 
-            const rp = await fetch(S_URL + 'cursos?select=plataforma', { headers });
-            const plats = [...new Set((await rp.json()).map(p => p.plataforma))].sort();
-            const ps = document.getElementById('plat-filter');
+            const ps = document.getElementById('plat-sel');
+            const plats = [...new Set(rp.map(p => p.plataforma))].sort();
             plats.forEach(p => { ps.innerHTML += `<option value="${p}">${p}</option>`; });
 
-            const rt = await fetch(S_URL + 'cursos?select=count', { headers });
-            document.getElementById('total-count').innerText = (await rt.json())[0].count.toLocaleString();
-            
-            fetchCourses();
+            fetchContent();
         }
 
-        document.getElementById('search-input').oninput = () => { page=0; clearTimeout(window.t); window.t = setTimeout(fetchCourses, 600); };
-        document.getElementById('cat-filter').onchange = () => { page=0; fetchCourses(); };
-        document.getElementById('plat-filter').onchange = () => { page=0; fetchCourses(); };
-        document.getElementById('prev-btn').onclick = () => { page--; fetchCourses(); window.scrollTo(0,0); };
-        document.getElementById('next-btn').onclick = () => { page++; fetchCourses(); window.scrollTo(0,0); };
+        document.getElementById('q-in').oninput = () => { currentPage = 1; clearTimeout(window.t); window.t = setTimeout(fetchContent, 600); };
+        document.getElementById('cat-sel').onchange = () => { currentPage = 1; fetchContent(); };
+        document.getElementById('plat-sel').onchange = () => { currentPage = 1; fetchContent(); };
         init();
     </script>
 </body>
