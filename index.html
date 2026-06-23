@@ -3,161 +3,168 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cursin V2 - La Mina de Oro</title>
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=10">
     <style>
-        :root { --gold: #eab308; --dark: #1f2937; }
-        .is-featured { border: 2px solid var(--gold) !important; background: rgba(234, 179, 8, 0.05); }
-        .badge-featured { background: var(--gold); color: black; padding: 4px 8px; font-size: 10px; font-weight: 900; border-radius: 4px; margin-bottom: 8px; display: inline-block; }
+        :root { --gold: #eab308; --dark: #111827; --blue: #2563eb; }
+        body { background: #f9fafb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Estilos de la tarjeta */
-        .card { cursor: pointer; transition: 0.3s; overflow: hidden; border: 1px solid #eee; border-radius: 12px; background: white; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .card-body { padding: 15px; }
-        .card h3 { font-size: 1.1rem; margin: 0 0 10px 0; color: var(--dark); line-height: 1.3; }
-        .card .desc-short { font-size: 0.9rem; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        /* Tooltip de ayuda */
+        .help-banner { background: #111827; color: white; text-align: center; padding: 8px; font-size: 0.85rem; }
+        
+        /* Header Mejorado */
+        .header-container { background: white; padding: 40px 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .stats-badge { background: #ecfdf5; color: #059669; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
+        
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        /* Tarjetas */
+        .card { cursor: pointer; transition: 0.3s; overflow: hidden; border-radius: 16px; background: white; border: 1px solid #e5e7eb; position: relative; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .card-img { height: 160px; background-size: cover; background-position: center; position: relative; }
+        .click-hint { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; opacity: 0; transition: 0.3s; }
+        .card:hover .click-hint { opacity: 1; }
+        
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card h3 { font-size: 1.1rem; margin: 0 0 10px 0; color: var(--dark); height: 2.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .card p { font-size: 0.88rem; color: #6b7280; line-height: 1.5; margin-bottom: 15px; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* Estilos del Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(8px); padding: 20px; }
-        .modal-content { background: white; padding: 0; border-radius: 20px; max-width: 600px; width: 100%; position: relative; overflow: hidden; animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5); z-index: 10; }
-        .modal-img { width: 100%; height: 250px; background-size: cover; background-position: center; }
-        .modal-body { padding: 30px; }
-        .modal-body h2 { margin-top: 0; font-size: 1.5rem; color: var(--dark); }
-        .modal-body p { color: #4b5563; line-height: 1.7; font-size: 1rem; margin: 20px 0; max-height: 200px; overflow-y: auto; }
-        .btn-main { display: block; width: 100%; padding: 18px; background: #2563eb; color: white; text-align: center; text-decoration: none; font-weight: bold; border-radius: 12px; font-size: 1.1rem; transition: 0.3s; }
-        .btn-main:hover { background: #1d4ed8; }
-        
-        .filters select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin: 5px; }
+        /* Modal Ultra-Pro */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 3000; backdrop-filter: blur(10px); padding: 15px; }
+        .modal-content { background: white; border-radius: 24px; max-width: 650px; width: 100%; position: relative; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .modal-header { height: 280px; background-size: cover; background-position: center; position: relative; }
+        .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.5rem; font-weight: bold; color: black; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .modal-body { padding: 35px; }
+        .modal-body h2 { font-size: 1.8rem; margin: 0 0 15px 0; color: var(--dark); line-height: 1.2; }
+        .modal-body p { color: #4b5563; line-height: 1.8; font-size: 1.05rem; margin-bottom: 25px; max-height: 250px; overflow-y: auto; padding-right: 10px; }
+        .btn-start { display: block; width: 100%; padding: 20px; background: var(--blue); color: white; text-align: center; text-decoration: none; font-weight: 700; border-radius: 16px; font-size: 1.2rem; transition: 0.3s; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4); }
+
+        /* Skeleton Loading */
+        .skeleton { background: #eee; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); border-radius: 5px; background-size: 200% 100%; animation: 1.5s shine linear infinite; }
+        @keyframes shine { to { background-position-x: -200%; } }
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <h1>Cursin V2 📚</h1>
-            <p id="totalCount">Sincronizando la mina de oro...</p>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="¿Qué quieres aprender? (Ej: Python, UNAM, Inglés...)">
-            </div>
-            <div class="filters">
-                <select id="categoryFilter"><option value="">Todas las Categorías</option></select>
-                <select id="platformFilter">
-                    <option value="">Todas las Plataformas</option>
-                    <option value="YouTube">YouTube</option>
-                    <option value="Santander">Santander</option>
-                    <option value="MexicoX">MexicoX</option>
-                    <option value="UNAM">UNAM</option>
-                    <option value="Coursera">Coursera</option>
-                    <option value="edX">edX</option>
-                </select>
-            </div>
+    <div class="help-banner">💡 Haz clic en cualquier curso para ver el certificado y detalles completos</div>
+    
+    <header class="header-container">
+        <div class="stats-badge">🚀 <span id="realCount">65,650</span> CURSOS DISPONIBLES</div>
+        <h1>Cursin V2 📚</h1>
+        <p>Buscando en la mina de oro de la educación gratuita.</p>
+        <div class="search-bar" style="margin-top:25px;">
+            <input type="text" id="searchInput" placeholder="Ej: Python, Excel, UNAM..." style="width: 80%; max-width: 500px; padding: 15px; border-radius: 12px; border: 1px solid #ddd; font-size: 1.1rem;">
+        </div>
+        <div class="filters" style="margin-top:15px;">
+            <select id="catFilter" style="padding:10px; border-radius:8px; border:1px solid #ddd;"></select>
+            <select id="platFilter" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
+                <option value="">Todas las plataformas</option>
+                <option value="YouTube">YouTube</option>
+                <option value="Santander">Santander</option>
+                <option value="MexicoX">MexicoX</option>
+                <option value="UNAM">UNAM (Coursera)</option>
+                <option value="Google">Google</option>
+            </select>
         </div>
     </header>
 
-    <main class="container">
-        <div id="courseGrid" class="grid"></div>
-        <div id="loading" class="loading">Buscando...</div>
-    </main>
+    <main class="grid" id="courseGrid"></main>
+    <div id="loading" style="text-align:center; padding:50px; display:none;">Cargando cursos...</div>
 
-    <!-- Modal Estructurado -->
     <div id="courseModal" class="modal-overlay">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
         <div class="modal-content">
-            <div id="modalImg" class="modal-img"></div>
+            <span class="modal-close" onclick="closeModal()">×</span>
+            <div id="mImg" class="modal-header"></div>
             <div class="modal-body">
-                <div id="modalTags" style="margin-bottom:15px;"></div>
-                <h2 id="modalTitle"></h2>
-                <p id="modalDesc"></p>
-                <a id="modalLink" href="#" target="_blank" class="btn-main">Empezar a aprender ahora</a>
+                <div id="mTags"></div>
+                <h2 id="mTitle"></h2>
+                <p id="mDesc"></p>
+                <a id="mLink" href="#" target="_blank" class="btn-start">IR AL CURSO Y CERTIFICARME</a>
             </div>
         </div>
     </div>
 
     <script>
-        const S_URL = 'https://ypzudkxowpxvdggvongz.supabase.co/rest/v1/';
-        const S_KEY = 'sb_publishable_KmyqfJTmmW4R5FKUeB5b4A_GVFYnn4b';
-        
-        const grid = document.getElementById('courseGrid');
-        const searchInput = document.getElementById('searchInput');
-        const catFilter = document.getElementById('categoryFilter');
-        const platFilter = document.getElementById('platformFilter');
-        const totalCount = document.getElementById('totalCount');
-
-        function openModal(c) {
-            const thumb = getThumb(c);
-            document.getElementById('modalImg').style.backgroundImage = `url('${thumb}')`;
-            document.getElementById('modalTitle').textContent = c.titulo;
-            document.getElementById('modalDesc').textContent = c.descripcion || 'Este curso no tiene una descripción detallada, pero es gratuito y tiene certificación oficial.';
-            document.getElementById('modalLink').href = c.url;
-            document.getElementById('modalTags').innerHTML = `<span class="tag tag-plat">${c.plataforma}</span> <span class="tag tag-cat">${c.categorias ? c.categorias.nombre : 'General'}</span>`;
-            document.getElementById('courseModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        window.closeModal = () => {
-            document.getElementById('courseModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        };
+        const URL = 'https://ypzudkxowpxvdggvongz.supabase.co/rest/v1/';
+        const KEY = 'sb_publishable_KmyqfJTmmW4R5FKUeB5b4A_GVFYnn4b';
+        const headers = { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` };
 
         function getThumb(c) {
             if (c.thumbnail_url && c.thumbnail_url.includes('http')) return c.thumbnail_url;
             const cat = (c.categorias ? c.categorias.nombre : '').toLowerCase();
-            if (cat.includes('program')) return 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600';
-            if (cat.includes('idioma')) return 'https://images.unsplash.com/photo-1543167664-40d6994796a1?w=600';
-            return 'https://images.unsplash.com/photo-1513258496099-48168024aec0?w=600';
+            if (cat.includes('program')) return 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600';
+            if (cat.includes('ingles') || cat.includes('idioma')) return 'https://images.unsplash.com/photo-1543167664-40d6994796a1?w=600';
+            if (cat.includes('diseño') || cat.includes('art')) return 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=600';
+            return 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600';
         }
 
+        function openModal(c) {
+            document.getElementById('mImg').style.backgroundImage = `url('${getThumb(c)}')`;
+            document.getElementById('mTitle').innerText = c.titulo;
+            document.getElementById('mDesc').innerText = c.descripcion || "Este es un curso gratuito de alta calidad. Haz clic en el botón inferior para acceder directamente a la plataforma y obtener tu certificación oficial.";
+            document.getElementById('mLink').href = c.url;
+            document.getElementById('mTags').innerHTML = `<span style="background:#f3f4f6; padding:4px 10px; border-radius:6px; font-size:0.8rem; font-weight:bold; color:#374151;">${c.plataforma}</span>`;
+            document.getElementById('courseModal').style.display = 'flex';
+        }
+
+        window.closeModal = () => document.getElementById('courseModal').style.display = 'none';
+
         async function fetchCourses() {
-            const q = searchInput.value;
-            const cat = catFilter.value;
-            const plat = platFilter.value;
-            
-            document.getElementById('loading').style.display = 'block';
+            const q = document.getElementById('searchInput').value;
+            const cat = document.getElementById('catFilter').value;
+            const plat = document.getElementById('platFilter').value;
+            const grid = document.getElementById('courseGrid');
             grid.innerHTML = '';
+            
+            let queryUrl = `${URL}cursos?select=*,categorias(nombre)&limit=100`;
+            if (q) queryUrl += `&or=(titulo.ilike.*${q}*,descripcion.ilike.*${q}*)`;
+            if (cat) queryUrl += `&categorias.nombre=eq.${cat}`;
+            if (plat) queryUrl += `&plataforma.ilike.*${plat}*`;
+            queryUrl += '&order=created_at.desc';
 
-            let url = `${S_URL}cursos?select=*,categorias(nombre)&limit=60`;
-            if (q) url += `&or=(titulo.ilike.*${q}*,descripcion.ilike.*${q}*)`;
-            if (cat) url += `&categorias.nombre=eq.${cat}`;
-            if (plat) url += `&plataforma.ilike.*${plat}*`;
-            url += '&order=created_at.desc';
-
-            try {
-                const r = await fetch(url, { headers: { 'apikey': S_KEY, 'Authorization': `Bearer ${S_KEY}` } });
-                const data = await r.json();
-                data.forEach(c => {
-                    const isF = (c.plataforma||'').toLowerCase().includes('santander') || (c.plataforma||'').toLowerCase().includes('unam');
-                    const div = document.createElement('div');
-                    div.className = `card ${isF ? 'is-featured' : ''}`;
-                    div.onclick = () => openModal(c);
-                    div.innerHTML = `
-                        <div style="height:150px; background:url('${getThumb(c)}') center/cover;"></div>
-                        <div class="card-body">
-                            ${isF ? '<span class="badge-featured">OFICIAL</span>' : ''}
-                            <h3>${c.titulo}</h3>
-                            <p class="desc-short">${c.descripcion || ''}</p>
-                            <div class="tag-row" style="margin-top:10px;">
-                                <span class="tag tag-plat">${c.plataforma}</span>
-                            </div>
-                        </div>`;
-                    grid.appendChild(div);
-                });
-            } finally { document.getElementById('loading').style.display = 'none'; }
+            const res = await fetch(queryUrl, { headers });
+            const data = await res.json();
+            data.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => openModal(c);
+                card.innerHTML = `
+                    <div class="card-img" style="background-image:url('${getThumb(c)}')">
+                        <div class="click-hint">Ver detalles</div>
+                    </div>
+                    <div class="card-content">
+                        <span style="font-size:0.7rem; font-weight:bold; color:var(--blue); text-transform:uppercase; letter-spacing:1px;">${c.plataforma}</span>
+                        <h3>${c.titulo}</h3>
+                        <p>${c.descripcion || "Haz clic para ver más información y acceder al curso."}</p>
+                    </div>`;
+                grid.appendChild(card);
+            });
         }
 
         async function init() {
-            const rc = await fetch(S_URL + 'categorias', { headers: { 'apikey': S_KEY } });
-            (await rc.json()).sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(c => {
-                const o = document.createElement('option'); o.value = c.nombre; o.textContent = c.nombre; catFilter.appendChild(o);
+            // Categorias
+            const rc = await fetch(URL + 'categorias', { headers });
+            const cats = await rc.json();
+            const cf = document.getElementById('catFilter');
+            cf.innerHTML = '<option value="">Todas las categorías</option>';
+            cats.sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(c => {
+                cf.innerHTML += `<option value="${c.nombre}">${c.nombre}</option>`;
             });
+            
+            // Total real
+            const rt = await fetch(URL + 'cursos?select=count', { headers });
+            const counts = await rt.json();
+            document.getElementById('realCount').innerText = counts[0].count.toLocaleString();
+            
             fetchCourses();
-            const rt = await fetch(S_URL + 'cursos?select=count', { headers: { 'apikey': S_KEY } });
-            totalCount.textContent = `Acceso a ${(await rt.json())[0].count.toLocaleString()} cursos gratuitos.`;
         }
 
-        let t;
-        searchInput.addEventListener('input', () => { clearTimeout(t); t = setTimeout(fetchCourses, 400); });
-        catFilter.addEventListener('change', fetchCourses);
-        platFilter.addEventListener('change', fetchCourses);
+        document.getElementById('searchInput').addEventListener('input', () => {
+            clearTimeout(window.t);
+            window.t = setTimeout(fetchCourses, 500);
+        });
+        document.getElementById('catFilter').addEventListener('change', fetchCourses);
+        document.getElementById('platFilter').addEventListener('change', fetchCourses);
         init();
     </script>
 </body></html>
