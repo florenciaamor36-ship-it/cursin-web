@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MODO DEBUG V17</title>
+</head>
+<body style="background: #000; color: #0f0; font-family: monospace; padding: 50px; text-align: center; font-size: 24px;">
+    <h1>OPERACIÓN LIMPIEZA CACHÉ V17</h1>
+    <p>Si ves esto en negro y verde, por fin entraste a la versión nueva.</p>
+    <div id="status">Cargando lógica de cursos...</div>
+    <script>
+        document.getElementById('status').innerText = "Lógica detectada. Refrescando sistema...";
+        setTimeout(() => {
+            window.location.reload(true);
+        }, 2000);
+    </script>
+</body>
+</html>
