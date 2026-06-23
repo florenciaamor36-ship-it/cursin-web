@@ -4,215 +4,232 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cursin V2 - La Mina de Oro</title>
     <style>
-        :root { --blue: #2563eb; --dark: #0f172a; --gold: #f59e0b; }
-        body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: #f8fafc; color: var(--dark); }
+        :root { --blue: #2563eb; --dark: #0f172a; --amber: #d97706; }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; background: #f1f5f9; color: var(--dark); }
+        
         header { background: white; padding: 30px 20px; text-align: center; border-bottom: 1px solid #e2e8f0; }
-        .stats { background: #fef3c7; color: #92400e; padding: 6px 16px; border-radius: 99px; font-weight: 700; font-size: 0.85rem; display: inline-block; margin-bottom: 10px; }
-        .search-box { max-width: 900px; margin: 20px auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        input, select { padding: 12px 16px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 0.95rem; min-width: 200px; }
+        .stats { background: #fffbeb; color: #92400e; padding: 6px 16px; border-radius: 99px; font-weight: 700; font-size: 0.85rem; display: inline-block; margin-bottom: 10px; border: 1px solid #fde68a; }
         
-        .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        
-        /* Tarjeta */
-        .card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; cursor: pointer; transition: 0.25s; display: flex; flex-direction: column; height: 100%; position: relative; }
-        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        
-        .img-wrap { height: 170px; width: 100%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .img-wrap img.is-logo { object-fit: contain; width: 70%; height: 70%; }
-        
-        .card-body { padding: 15px; flex-grow: 1; }
-        .p-tag { font-size: 0.7rem; font-weight: 700; color: var(--blue); text-transform: uppercase; margin-bottom: 5px; }
-        .card h3 { margin: 0 0 8px 0; font-size: 1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card p { font-size: 0.8rem; color: #64748b; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .search-area { max-width: 1000px; margin: 20px auto; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+        input, select { padding: 12px 16px; border-radius: 12px; border: 1px solid #cbd5e1; font-size: 0.95rem; background: white; outline: none; }
+        input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        input { width: 300px; }
 
-        /* Paginación numerada */
-        .pagi { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 40px 0; align-items: center; }
-        .pagi button { padding: 8px 14px; border: 1px solid #e2e8f0; background: white; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
-        .pagi button.active { background: var(--blue); color: white; border-color: var(--blue); }
-        .pagi button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        
+        /* Tarjeta Estilo Premium */
+        .card { background: white; border-radius: 20px; border: 1px solid #e2e8f0; overflow: hidden; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; height: 100%; position: relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        
+        .img-container { height: 180px; width: 100%; background: #f8fafc; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border-bottom: 1px solid #f1f5f9; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .img-container img.is-logo { object-fit: contain; width: 85%; height: 85%; padding: 10%; }
+
+        .official-tag { position: absolute; top: 12px; left: 12px; background: #fbbf24; color: #78350f; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 0.7rem; z-index: 2; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .plat-label { font-size: 0.75rem; font-weight: 800; color: var(--blue); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; color: #1e293b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card p { font-size: 0.85rem; color: #64748b; line-height: 1.5; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Paginación Numerada */
+        .pagination { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 50px 0; align-items: center; }
+        .pagination button { min-width: 45px; height: 45px; border: 1px solid #e2e8f0; background: white; border-radius: 12px; cursor: pointer; font-weight: 600; color: #64748b; transition: 0.2s; }
+        .pagination button.active { background: var(--blue); color: white; border-color: var(--blue); }
+        .pagination button:hover:not(.active):not(:disabled) { background: #f1f5f9; border-color: var(--blue); color: var(--blue); }
+        .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
 
         /* Modal */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(4px); padding: 20px; box-sizing: border-box; }
-        .m-content { background: white; border-radius: 20px; max-width: 600px; width: 100%; overflow: hidden; position: relative; }
-        .m-close { position: absolute; top: 10px; right: 20px; font-size: 2.5rem; cursor: pointer; color: #64748b; z-index: 10; }
-        .m-img { height: 250px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .m-img img { width: 100%; height: 100%; object-fit: cover; }
-        .m-body { padding: 30px; }
-        .btn-link { display: block; background: var(--blue); color: white; text-align: center; padding: 16px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 20px; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); display: none; justify-content: center; align-items: center; z-index: 9999; backdrop-filter: blur(12px); padding: 20px; }
+        .modal-card { background: white; border-radius: 28px; max-width: 650px; width: 100%; overflow: hidden; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease; }
+        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-close { position: absolute; top: 20px; right: 25px; width: 40px; height: 40px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.5rem; font-weight: bold; color: black; z-index: 10; }
+        .modal-hero { height: 300px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .modal-hero img { width: 100%; height: 100%; object-fit: cover; }
+        .modal-hero img.is-logo { object-fit: contain; width: 60%; height: 60%; }
+        .modal-body { padding: 40px; }
+        .modal-body h2 { margin: 0 0 15px 0; font-size: 1.8rem; color: #1e293b; line-height: 1.2; }
+        .modal-body p { color: #475569; line-height: 1.8; font-size: 1.05rem; margin-bottom: 30px; }
+        .btn-action { display: block; background: var(--blue); color: white; text-align: center; padding: 20px; border-radius: 16px; text-decoration: none; font-weight: 800; font-size: 1.2rem; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); transition: 0.2s; }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4); }
     </style>
 </head>
 <body>
     <header>
-        <div class="stats">🚀 <span id="total-val">...</span> CURSOS EN LA BASE DE DATOS</div>
+        <div class="stats">🚀 <span id="total-span">...</span> CURSOS EN LA MINA DE ORO</div>
         <h1>Cursin V2 📚</h1>
-        <div class="search-box">
-            <input type="text" id="q-in" placeholder="¿Qué quieres aprender?">
-            <select id="cat-sel"><option value="">Todas las Categorías</option></select>
-            <select id="plat-sel"><option value="">Todas las Plataformas</option></select>
+        <div class="search-area">
+            <input type="text" id="q-input" placeholder="¿Qué quieres aprender hoy?">
+            <select id="cat-select"><option value="">Todas las Categorías</option></select>
+            <select id="plat-select">
+                <option value="">Todas las Plataformas</option>
+                <option value="YouTube">YouTube</option>
+                <option value="Santander">Santander</option>
+                <option value="MexicoX">MexicoX</option>
+                <option value="UNAM">UNAM</option>
+                <option value="Microsoft">Microsoft</option>
+                <option value="Google">Google</option>
+                <option value="Coursera">Coursera</option>
+                <option value="edX">edX</option>
+                <option value="Edutin">Edutin</option>
+            </select>
         </div>
     </header>
 
     <div class="container">
         <div id="course-grid" class="grid"></div>
-        <div id="loader" style="text-align:center; padding:50px;">Buscando cursos...</div>
-        <div id="pagi-wrap" class="pagi"></div>
+        <div id="loader-msg" style="text-align:center; padding:100px; font-size:1.2rem; font-weight:500; color:#64748b;">⛏️ Picando la mina de oro...</div>
+        <div id="pagination-nav" class="pagination"></div>
     </div>
 
-    <div id="course-modal" class="modal" onclick="if(event.target==this)closeM()">
-        <span class="m-close" onclick="closeM()">&times;</span>
-        <div class="m-content">
-            <div id="m-header-img" class="m-img"></div>
-            <div class="m-body">
-                <div id="m-plat-name" class="p-tag"></div>
-                <h2 id="m-title-text" style="margin:0 0 15px 0;"></h2>
-                <p id="m-desc-text" style="color:#475569; line-height:1.6;"></p>
-                <a id="m-go-link" href="#" target="_blank" class="btn-link">ACCEDER AL CURSO GRATIS</a>
+    <div id="modal-view" class="modal" onclick="if(event.target==this)closeModal()">
+        <div class="modal-card">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="m-hero-wrap" class="modal-hero"></div>
+            <div class="modal-body">
+                <div id="m-plat-label" class="plat-label"></div>
+                <h2 id="m-title-h2"></h2>
+                <p id="m-desc-p"></p>
+                <a id="m-btn-link" href="#" target="_blank" class="btn-action">IR AL CURSO Y CERTIFICARME</a>
             </div>
         </div>
     </div>
 
     <script>
-        const S_URL = 'https://ypzudkxowpxvdggvongz.supabase.co/rest/v1/';
-        const S_KEY = 'sb_publishable_KmyqfJTmmW4R5FKUeB5b4A_GVFYnn4b';
-        const headers = { 'apikey': S_KEY, 'Authorization': 'Bearer ' + S_KEY };
+        const SUPA_URL = 'https://ypzudkxowpxvdggvongz.supabase.co/rest/v1/';
+        const SUPA_KEY = 'sb_publishable_KmyqfJTmmW4R5FKUeB5b4A_GVFYnn4b';
+        const HEADERS = { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY };
         
-        let currentPage = 1;
-        const limit = 24;
-        let totalRecords = 0;
+        let pageIdx = 1;
+        const perPage = 24;
+        let totalCount = 0;
 
-        function getYoutubeThumb(url) {
+        function getYTThumb(url) {
             if (!url) return null;
-            const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length == 11) ? `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg` : null;
+            const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+            return match ? `https://i.ytimg.com/vi/${match[1]}/mqdefault.jpg` : null;
         }
 
-        function getImg(c) {
-            const yt = getYoutubeThumb(c.url);
+        function getSafeImg(c) {
+            const yt = getYTThumb(c.url);
             if (yt) return yt;
             if (c.imagen_url && c.imagen_url.includes('http')) return c.imagen_url;
-            return 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600';
+            // Fallbacks temáticos
+            const cat = (c.categorias ? c.categorias.nombre : '').toLowerCase();
+            if (cat.includes('prog')) return 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800';
+            if (cat.includes('ingl') || cat.includes('idio')) return 'https://images.unsplash.com/photo-1543167664-40d6994796a1?w=800';
+            return 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800';
         }
 
-        function openM(c) {
-            document.getElementById('m-header-img').innerHTML = `<img src="${getImg(c)}">`;
-            document.getElementById('m-title-text').innerText = c.titulo;
-            document.getElementById('m-desc-text').innerText = c.descripcion || "Curso oficial con certificación gratuita.";
-            document.getElementById('m-plat-name').innerText = c.plataforma;
-            document.getElementById('m-go-link').href = c.url;
-            document.getElementById('course-modal').style.display = 'flex';
+        function openModal(c) {
+            const thumb = getSafeImg(c);
+            const isLogo = c.plataforma.toLowerCase().includes('youtube') && !getYTThumb(c.url);
+            document.getElementById('m-hero-wrap').innerHTML = `<img src="${thumb}" class="${isLogo ? 'is-logo' : ''}">`;
+            document.getElementById('m-title-h2').innerText = c.titulo;
+            document.getElementById('m-desc-p').innerText = c.descripcion || "Este curso gratuito te permite aprender a tu ritmo y obtener una certificación oficial al finalizar.";
+            document.getElementById('m-plat-label').innerText = c.plataforma;
+            document.getElementById('m-btn-link').href = c.url;
+            document.getElementById('modal-view').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
-        function closeM() { document.getElementById('course-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
 
-        async function fetchContent() {
+        function closeModal() {
+            document.getElementById('modal-view').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        async function fetchNow() {
             const grid = document.getElementById('course-grid');
-            const loader = document.getElementById('loader');
-            const search = document.getElementById('q-in').value;
-            const cat = document.getElementById('cat-sel').value;
-            const plat = document.getElementById('plat-sel').value;
+            const loader = document.getElementById('loader-msg');
+            const search = document.getElementById('q-input').value;
+            const cat = document.getElementById('cat-select').value;
+            const plat = document.getElementById('plat-select').value;
 
             loader.style.display = 'block';
             grid.innerHTML = '';
-            document.getElementById('pagi-wrap').innerHTML = '';
+            document.getElementById('pagination-nav').innerHTML = '';
 
-            let u = `${S_URL}cursos?select=*,categorias(nombre)&limit=${limit}&offset=${(currentPage - 1) * limit}`;
-            if (search) u += `&or=(titulo.ilike.*${encodeURIComponent(search)}*,descripcion.ilike.*${encodeURIComponent(search)}*)`;
-            if (cat) u += `&categorias.nombre=eq.${encodeURIComponent(cat)}`;
-            if (plat) u += `&plataforma.eq.${encodeURIComponent(plat)}`;
-            u += '&order=creado_el.desc';
+            let base = `${SUPA_URL}cursos?select=*,categorias(nombre)&limit=${perPage}&offset=${(pageIdx - 1) * perPage}`;
+            if (search) base += `&or=(titulo.ilike.*${encodeURIComponent(search)}*,descripcion.ilike.*${encodeURIComponent(search)}*)`;
+            if (cat) base += `&categorias.nombre=eq.${encodeURIComponent(cat)}`;
+            if (plat) base += `&plataforma.ilike.*${encodeURIComponent(plat)}*`;
+            base += '&order=creado_el.desc';
 
             try {
-                const r = await fetch(u, { headers });
-                const data = await r.json();
+                const [r, cr] = await Promise.all([
+                    fetch(base, { headers: HEADERS }).then(r => r.json()),
+                    fetch(`${SUPA_URL}cursos?select=count`, { headers: HEADERS }).then(r => r.json())
+                ]);
                 
-                // Fetch count for pagination
-                let countU = `${S_URL}cursos?select=count`;
-                if (search) countU += `&or=(titulo.ilike.*${encodeURIComponent(search)}*,descripcion.ilike.*${encodeURIComponent(search)}*)`;
-                if (cat) countU += `&categorias.nombre=eq.${encodeURIComponent(cat)}`;
-                if (plat) countU += `&plataforma.eq.${encodeURIComponent(plat)}`;
-                const cr = await fetch(countU, { headers });
-                const cData = await cr.json();
-                totalRecords = cData[0].count;
-                document.getElementById('total-val').innerText = totalRecords.toLocaleString();
+                totalCount = cr[0].count;
+                document.getElementById('total-span').innerText = totalCount.toLocaleString();
 
+                if (r.length === 0) {
+                    loader.innerText = '⚠️ No encontramos cursos con ese nombre.';
+                    return;
+                }
+                
                 loader.style.display = 'none';
-                data.forEach(c => {
+                r.forEach(c => {
+                    const isOff = ['santander', 'unam', 'mexicox', 'google', 'microsoft'].some(v => c.plataforma.toLowerCase().includes(v));
+                    const isLogo = c.plataforma.toLowerCase().includes('youtube') && !getYTThumb(c.url);
                     const card = document.createElement('div');
                     card.className = 'card';
-                    card.onclick = () => openM(c);
-                    const isYT = c.plataforma.toLowerCase().includes('youtube');
+                    card.onclick = () => openModal(c);
                     card.innerHTML = `
-                        <div class="img-wrap">
-                            <img src="${getImg(c)}" class="${(isYT && !getYoutubeThumb(c.url)) ? 'is-logo' : ''}">
+                        <div class="img-container">
+                            ${isOff ? '<div class="official-tag">OFICIAL</div>' : ''}
+                            <img src="${getSafeImg(c)}" class="${isLogo ? 'is-logo' : ''}" onerror="this.src='https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600'">
                         </div>
-                        <div class="card-body">
-                            <div class="p-tag">${c.plataforma}</div>
+                        <div class="card-content">
+                            <div class="plat-label">${c.plataforma}</div>
                             <h3>${c.titulo}</h3>
                             <p>${c.descripcion || ''}</p>
                         </div>`;
                     grid.appendChild(card);
                 });
                 
-                renderPagination();
-            } catch (e) { loader.innerText = 'Error al cargar cursos.'; }
+                renderPagi();
+            } catch (err) { loader.innerText = '❌ Error de conexión.'; }
         }
 
-        function renderPagination() {
-            const wrap = document.getElementById('pagi-wrap');
-            const totalPages = Math.ceil(totalRecords / limit);
-            const maxVisible = 5;
-            
-            let start = Math.max(1, currentPage - 2);
-            let end = Math.min(totalPages, start + maxVisible - 1);
-            if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
+        function renderPagi() {
+            const nav = document.getElementById('pagination-nav');
+            const totalPages = Math.min(Math.ceil(totalCount / perPage), 500); // Limit to 500 pages for UI
+            const start = Math.max(1, pageIdx - 2);
+            const end = Math.min(totalPages, start + 4);
 
-            if (currentPage > 1) {
-                const btn = document.createElement('button');
-                btn.innerText = '«';
-                btn.onclick = () => { currentPage = 1; fetchContent(); window.scrollTo(0,0); };
-                wrap.appendChild(btn);
+            if (pageIdx > 1) {
+                const b = document.createElement('button'); b.innerText = '«'; b.onclick = () => { pageIdx = 1; fetchNow(); window.scrollTo(0,0); };
+                nav.appendChild(b);
             }
 
-            for (let i = start; i <= end; i++) {
-                const btn = document.createElement('button');
-                btn.innerText = i;
-                if (i === currentPage) btn.className = 'active';
-                btn.onclick = () => { currentPage = i; fetchContent(); window.scrollTo(0,0); };
-                wrap.appendChild(btn);
+            for (let i = (end - start < 4 ? Math.max(1, end - 4) : start); i <= end; i++) {
+                const b = document.createElement('button'); b.innerText = i;
+                if (i === pageIdx) b.className = 'active';
+                b.onclick = () => { pageIdx = i; fetchNow(); window.scrollTo(0,0); };
+                nav.appendChild(b);
             }
 
-            if (currentPage < totalPages) {
-                const btn = document.createElement('button');
-                btn.innerText = '»';
-                btn.onclick = () => { currentPage = totalPages; fetchContent(); window.scrollTo(0,0); };
-                wrap.appendChild(btn);
+            if (pageIdx < totalPages) {
+                const b = document.createElement('button'); b.innerText = '»'; b.onclick = () => { pageIdx = totalPages; fetchNow(); window.scrollTo(0,0); };
+                nav.appendChild(b);
             }
         }
 
         async function init() {
-            const [rc, rp] = await Promise.all([
-                fetch(S_URL + 'categorias', { headers }).then(r => r.json()),
-                fetch(S_URL + 'cursos?select=plataforma', { headers }).then(r => r.json())
-            ]);
-            
-            const cs = document.getElementById('cat-sel');
+            const rc = await fetch(SUPA_URL + 'categorias', { headers: HEADERS }).then(r => r.json());
+            const sel = document.getElementById('cat-select');
             rc.sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(c => {
-                cs.innerHTML += `<option value="${c.nombre}">${c.nombre}</option>`;
+                const o = document.createElement('option'); o.value = c.nombre; o.innerText = c.nombre; sel.appendChild(o);
             });
-
-            const ps = document.getElementById('plat-sel');
-            const plats = [...new Set(rp.map(p => p.plataforma))].sort();
-            plats.forEach(p => { ps.innerHTML += `<option value="${p}">${p}</option>`; });
-
-            fetchContent();
+            fetchNow();
         }
 
-        document.getElementById('q-in').oninput = () => { currentPage = 1; clearTimeout(window.t); window.t = setTimeout(fetchContent, 600); };
-        document.getElementById('cat-sel').onchange = () => { currentPage = 1; fetchContent(); };
-        document.getElementById('plat-sel').onchange = () => { currentPage = 1; fetchContent(); };
+        document.getElementById('q-input').oninput = () => { pageIdx = 1; clearTimeout(window.t); window.t = setTimeout(fetchNow, 600); };
+        document.getElementById('cat-select').onchange = () => { pageIdx = 1; fetchNow(); };
+        document.getElementById('plat-select').onchange = () => { pageIdx = 1; fetchNow(); };
         init();
     </script>
 </body>
