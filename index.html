@@ -3,168 +3,140 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cursin V2 - La Mina de Oro</title>
-    <link rel="stylesheet" href="style.css?v=10">
     <style>
-        :root { --gold: #eab308; --dark: #111827; --blue: #2563eb; }
-        body { background: #f9fafb; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root { --blue: #2563eb; --dark: #111827; }
+        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: #f9fafb; color: var(--dark); }
+        header { background: white; padding: 40px 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .stats { background: #ecfdf5; color: #059669; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; cursor: pointer; transition: 0.2s; position: relative; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .card-img { height: 150px; background-size: cover; background-position: center; background-color: #ddd; }
+        .card-body { padding: 15px; }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card p { font-size: 0.9rem; color: #6b7280; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+        .hint { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; }
         
-        /* Tooltip de ayuda */
-        .help-banner { background: #111827; color: white; text-align: center; padding: 8px; font-size: 0.85rem; }
+        /* Modal */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; border-radius: 20px; max-width: 600px; width: 100%; overflow: hidden; position: relative; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #999; z-index: 10; }
+        .modal-img { height: 200px; background-size: cover; background-position: center; }
+        .modal-body { padding: 25px; }
+        .btn { display: block; background: var(--blue); color: white; text-align: center; padding: 15px; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 20px; }
         
-        /* Header Mejorado */
-        .header-container { background: white; padding: 40px 20px; text-align: center; border-bottom: 1px solid #eee; }
-        .stats-badge { background: #ecfdf5; color: #059669; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
-        
-        /* Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px; max-width: 1200px; margin: 0 auto; }
-        
-        /* Tarjetas */
-        .card { cursor: pointer; transition: 0.3s; overflow: hidden; border-radius: 16px; background: white; border: 1px solid #e5e7eb; position: relative; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .card-img { height: 160px; background-size: cover; background-position: center; position: relative; }
-        .click-hint { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; opacity: 0; transition: 0.3s; }
-        .card:hover .click-hint { opacity: 1; }
-        
-        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card h3 { font-size: 1.1rem; margin: 0 0 10px 0; color: var(--dark); height: 2.6rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .card p { font-size: 0.88rem; color: #6b7280; line-height: 1.5; margin-bottom: 15px; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
-        /* Modal Ultra-Pro */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 3000; backdrop-filter: blur(10px); padding: 15px; }
-        .modal-content { background: white; border-radius: 24px; max-width: 650px; width: 100%; position: relative; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        .modal-header { height: 280px; background-size: cover; background-position: center; position: relative; }
-        .modal-close { position: absolute; top: 20px; right: 20px; width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.5rem; font-weight: bold; color: black; z-index: 10; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .modal-body { padding: 35px; }
-        .modal-body h2 { font-size: 1.8rem; margin: 0 0 15px 0; color: var(--dark); line-height: 1.2; }
-        .modal-body p { color: #4b5563; line-height: 1.8; font-size: 1.05rem; margin-bottom: 25px; max-height: 250px; overflow-y: auto; padding-right: 10px; }
-        .btn-start { display: block; width: 100%; padding: 20px; background: var(--blue); color: white; text-align: center; text-decoration: none; font-weight: 700; border-radius: 16px; font-size: 1.2rem; transition: 0.3s; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
-        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.4); }
-
-        /* Skeleton Loading */
-        .skeleton { background: #eee; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); border-radius: 5px; background-size: 200% 100%; animation: 1.5s shine linear infinite; }
-        @keyframes shine { to { background-position-x: -200%; } }
+        input, select { padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; font-size: 1rem; }
     </style>
 </head>
 <body>
-    <div class="help-banner">💡 Haz clic en cualquier curso para ver el certificado y detalles completos</div>
-    
-    <header class="header-container">
-        <div class="stats-badge">🚀 <span id="realCount">65,650</span> CURSOS DISPONIBLES</div>
+    <div style="background: #111827; color: white; text-align: center; padding: 10px; font-size: 0.9rem;">💡 Haz clic en un curso para ver detalles y certificado</div>
+    <header>
+        <div class="stats">🚀 <span id="count">65,650</span> CURSOS DISPONIBLES</div>
         <h1>Cursin V2 📚</h1>
-        <p>Buscando en la mina de oro de la educación gratuita.</p>
-        <div class="search-bar" style="margin-top:25px;">
-            <input type="text" id="searchInput" placeholder="Ej: Python, Excel, UNAM..." style="width: 80%; max-width: 500px; padding: 15px; border-radius: 12px; border: 1px solid #ddd; font-size: 1.1rem;">
-        </div>
-        <div class="filters" style="margin-top:15px;">
-            <select id="catFilter" style="padding:10px; border-radius:8px; border:1px solid #ddd;"></select>
-            <select id="platFilter" style="padding:10px; border-radius:8px; border:1px solid #ddd;">
-                <option value="">Todas las plataformas</option>
-                <option value="YouTube">YouTube</option>
-                <option value="Santander">Santander</option>
-                <option value="MexicoX">MexicoX</option>
-                <option value="UNAM">UNAM (Coursera)</option>
-                <option value="Google">Google</option>
-            </select>
-        </div>
+        <input type="text" id="search" placeholder="¿Qué quieres aprender?" style="width: 80%; max-width: 400px;">
+        <br>
+        <select id="cat"><option value="">Categorías</option></select>
+        <select id="plat">
+            <option value="">Plataformas</option>
+            <option value="YouTube">YouTube</option>
+            <option value="Santander">Santander</option>
+            <option value="UNAM">UNAM</option>
+            <option value="MexicoX">MexicoX</option>
+        </select>
     </header>
 
-    <main class="grid" id="courseGrid"></main>
-    <div id="loading" style="text-align:center; padding:50px; display:none;">Cargando cursos...</div>
+    <div id="grid" class="grid"></div>
+    <div id="msg" style="text-align:center; padding:50px;">Cargando la mina de oro...</div>
 
-    <div id="courseModal" class="modal-overlay">
+    <div id="modal" class="modal" onclick="if(event.target==this)closeM()">
         <div class="modal-content">
-            <span class="modal-close" onclick="closeModal()">×</span>
-            <div id="mImg" class="modal-header"></div>
+            <span class="modal-close" onclick="closeM()">&times;</span>
+            <div id="mImg" class="modal-img"></div>
             <div class="modal-body">
-                <div id="mTags"></div>
-                <h2 id="mTitle"></h2>
+                <h2 id="mTitle" style="margin-top:0;"></h2>
                 <p id="mDesc"></p>
-                <a id="mLink" href="#" target="_blank" class="btn-start">IR AL CURSO Y CERTIFICARME</a>
+                <a id="mLink" href="#" target="_blank" class="btn">IR AL CURSO Y CERTIFICARME</a>
             </div>
         </div>
     </div>
 
     <script>
-        const URL = 'https://ypzudkxowpxvdggvongz.supabase.co/rest/v1/';
-        const KEY = 'sb_publishable_KmyqfJTmmW4R5FKUeB5b4A_GVFYnn4b';
-        const headers = { 'apikey': KEY, 'Authorization': `Bearer ${KEY}` };
+        const S_URL = 'https://ypzudkxowpxvdggvongz.supabase.co/rest/v1/';
+        const S_KEY = 'sb_publishable_KmyqfJTmmW4R5FKUeB5b4A_GVFYnn4b';
+        const headers = { 'apikey': S_KEY, 'Authorization': 'Bearer ' + S_KEY };
 
-        function getThumb(c) {
+        function getImg(c) {
             if (c.thumbnail_url && c.thumbnail_url.includes('http')) return c.thumbnail_url;
             const cat = (c.categorias ? c.categorias.nombre : '').toLowerCase();
-            if (cat.includes('program')) return 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600';
-            if (cat.includes('ingles') || cat.includes('idioma')) return 'https://images.unsplash.com/photo-1543167664-40d6994796a1?w=600';
-            if (cat.includes('diseño') || cat.includes('art')) return 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=600';
+            if (cat.includes('prog')) return 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600';
+            if (cat.includes('ingl') || cat.includes('idio')) return 'https://images.unsplash.com/photo-1543167664-40d6994796a1?w=600';
             return 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600';
         }
 
-        function openModal(c) {
-            document.getElementById('mImg').style.backgroundImage = `url('${getThumb(c)}')`;
+        function openM(c) {
+            document.getElementById('mImg').style.backgroundImage = "url('" + getImg(c) + "')";
             document.getElementById('mTitle').innerText = c.titulo;
-            document.getElementById('mDesc').innerText = c.descripcion || "Este es un curso gratuito de alta calidad. Haz clic en el botón inferior para acceder directamente a la plataforma y obtener tu certificación oficial.";
+            document.getElementById('mDesc').innerText = c.descripcion || "Curso gratuito con certificación oficial disponible.";
             document.getElementById('mLink').href = c.url;
-            document.getElementById('mTags').innerHTML = `<span style="background:#f3f4f6; padding:4px 10px; border-radius:6px; font-size:0.8rem; font-weight:bold; color:#374151;">${c.plataforma}</span>`;
-            document.getElementById('courseModal').style.display = 'flex';
+            document.getElementById('modal').style.display = 'flex';
         }
+        function closeM() { document.getElementById('modal').style.display = 'none'; }
 
-        window.closeModal = () => document.getElementById('courseModal').style.display = 'none';
-
-        async function fetchCourses() {
-            const q = document.getElementById('searchInput').value;
-            const cat = document.getElementById('catFilter').value;
-            const plat = document.getElementById('platFilter').value;
-            const grid = document.getElementById('courseGrid');
-            grid.innerHTML = '';
+        async function load() {
+            const q = document.getElementById('search').value;
+            const ct = document.getElementById('cat').value;
+            const pl = document.getElementById('plat').value;
+            const grid = document.getElementById('grid');
+            const msg = document.getElementById('msg');
             
-            let queryUrl = `${URL}cursos?select=*,categorias(nombre)&limit=100`;
-            if (q) queryUrl += `&or=(titulo.ilike.*${q}*,descripcion.ilike.*${q}*)`;
-            if (cat) queryUrl += `&categorias.nombre=eq.${cat}`;
-            if (plat) queryUrl += `&plataforma.ilike.*${plat}*`;
-            queryUrl += '&order=created_at.desc';
+            msg.style.display = 'block';
+            grid.innerHTML = '';
 
-            const res = await fetch(queryUrl, { headers });
-            const data = await res.json();
-            data.forEach(c => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.onclick = () => openModal(c);
-                card.innerHTML = `
-                    <div class="card-img" style="background-image:url('${getThumb(c)}')">
-                        <div class="click-hint">Ver detalles</div>
-                    </div>
-                    <div class="card-content">
-                        <span style="font-size:0.7rem; font-weight:bold; color:var(--blue); text-transform:uppercase; letter-spacing:1px;">${c.plataforma}</span>
-                        <h3>${c.titulo}</h3>
-                        <p>${c.descripcion || "Haz clic para ver más información y acceder al curso."}</p>
-                    </div>`;
-                grid.appendChild(card);
-            });
+            let u = S_URL + 'cursos?select=*,categorias(nombre)&limit=100';
+            if (q) u += '&or=(titulo.ilike.*' + q + '*,descripcion.ilike.*' + q + '*)';
+            if (ct) u += '&categorias.nombre=eq.' + ct;
+            if (pl) u += '&plataforma.ilike.*' + pl + '*';
+            u += '&order=created_at.desc';
+
+            try {
+                const r = await fetch(u, { headers });
+                const data = await r.json();
+                msg.style.display = 'none';
+                if (data.length === 0) msg.innerText = 'No se encontraron cursos.';
+                data.forEach(c => {
+                    const d = document.createElement('div');
+                    d.className = 'card';
+                    d.onclick = () => openM(c);
+                    d.innerHTML = '<div class="card-img" style="background-image:url(\'' + getImg(c) + '\')"></div>' +
+                                  '<div class="card-body"><span style="font-size:0.7rem;color:var(--blue);font-weight:bold;">' + c.plataforma + '</span>' +
+                                  '<h3>' + c.titulo + '</h3><p>' + (c.descripcion || '') + '</p></div>' +
+                                  '<div class="hint">Ver más</div>';
+                    grid.appendChild(d);
+                });
+            } catch (e) { msg.innerText = 'Error al conectar con la base de datos.'; }
         }
 
         async function init() {
-            // Categorias
-            const rc = await fetch(URL + 'categorias', { headers });
-            const cats = await rc.json();
-            const cf = document.getElementById('catFilter');
-            cf.innerHTML = '<option value="">Todas las categorías</option>';
-            cats.sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(c => {
-                cf.innerHTML += `<option value="${c.nombre}">${c.nombre}</option>`;
-            });
-            
-            // Total real
-            const rt = await fetch(URL + 'cursos?select=count', { headers });
-            const counts = await rt.json();
-            document.getElementById('realCount').innerText = counts[0].count.toLocaleString();
-            
-            fetchCourses();
+            try {
+                const rc = await fetch(S_URL + 'categorias', { headers });
+                const cats = await rc.json();
+                const sel = document.getElementById('cat');
+                cats.sort((a,b) => a.nombre.localeCompare(b.nombre)).forEach(c => {
+                    const o = document.createElement('option'); o.value = c.nombre; o.innerText = c.nombre; sel.appendChild(o);
+                });
+                
+                const rt = await fetch(S_URL + 'cursos?select=count', { headers });
+                const counts = await rt.json();
+                document.getElementById('count').innerText = counts[0].count.toLocaleString();
+                
+                load();
+            } catch (e) { console.error(e); }
         }
 
-        document.getElementById('searchInput').addEventListener('input', () => {
-            clearTimeout(window.t);
-            window.t = setTimeout(fetchCourses, 500);
-        });
-        document.getElementById('catFilter').addEventListener('change', fetchCourses);
-        document.getElementById('platFilter').addEventListener('change', fetchCourses);
+        document.getElementById('search').oninput = () => { clearTimeout(window.t); window.t = setTimeout(load, 500); };
+        document.getElementById('cat').onchange = load;
+        document.getElementById('plat').onchange = load;
         init();
     </script>
-</body></html>
+</body>
+</html>
